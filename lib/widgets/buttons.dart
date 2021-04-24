@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../contraints.dart';
 
 class Buttons extends StatelessWidget {
   final Function toggleTimer;
   final Function togglePause;
+  final Function addTask;
   final bool isTimerPaused;
   final bool isTimerRunning;
 
@@ -13,15 +15,42 @@ class Buttons extends StatelessWidget {
     this.isTimerRunning,
     this.togglePause,
     this.isTimerPaused,
+    this.addTask,
   );
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        (isTimerRunning)
+            ? _buildButton(
+                text: (isTimerPaused) ? "Resume Timer" : "Pause Timer",
+                color: kDarkGreenColor,
+                ontap: () => togglePause(),
+              )
+            : _buildButton(
+                text: "New Task",
+                color: kDarkGreenColor,
+                ontap: () {
+                  addTask(context);
+                },
+              ),
+        _buildButton(
+          text: (isTimerRunning) ? "Stop Timer" : "Start Timer",
+          color: kPurpleColor,
+          ontap: () => toggleTimer(),
+        )
+      ],
+    );
+  }
 
   InkWell _buildButton({String text, Color color, Function ontap}) {
     return InkWell(
       onTap: ontap,
-      child: Container(
+      child: Ink(
         padding: EdgeInsets.symmetric(vertical: 10),
-        alignment: Alignment.center,
-        width: 160,
+        width: 160.w,
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(10),
@@ -31,41 +60,11 @@ class Buttons extends StatelessWidget {
           text,
           style: TextStyle(
             color: Colors.white,
-            fontSize: 18,
+            fontSize: 18.sp,
           ),
+          textAlign: TextAlign.center,
         ),
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        (isTimerRunning)
-            ? (isTimerPaused)
-                ? _buildButton(
-                    text: "Resume Timer",
-                    color: kDarkGreenColor,
-                    ontap: () => togglePause(),
-                  )
-                : _buildButton(
-                    text: "Pause Timer",
-                    color: kDarkGreenColor,
-                    ontap: () => togglePause(),
-                  )
-            : _buildButton(
-                text: "New Task",
-                color: kDarkGreenColor,
-                ontap: () {},
-              ),
-        _buildButton(
-          text: (isTimerRunning) ? "Stop Timer" : "Start Timer",
-          color: kPurpleColor,
-          ontap: () => toggleTimer(),
-        )
-      ],
     );
   }
 }
