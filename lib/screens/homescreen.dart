@@ -6,7 +6,7 @@ import '../widgets/heading.dart';
 import '../widgets/time_display.dart';
 import '../widgets/tasks.dart';
 import '../widgets/buttons.dart';
-import '../contraints.dart';
+import '../constraints.dart';
 
 class Homescreen extends StatefulWidget {
   @override
@@ -60,7 +60,6 @@ class _HomescreenState extends State<Homescreen> {
     print("Stopping timer");
     if (_timer != null) {
       _timer.cancel();
-      minutes = _focusTime;
       print("timer cleared");
     }
   }
@@ -86,7 +85,6 @@ class _HomescreenState extends State<Homescreen> {
       setState(() {
         isTimerRunning = false;
       });
-      isTimerPaused = false;
       _stopTimer();
     } else {
       setState(() {
@@ -169,11 +167,9 @@ class _HomescreenState extends State<Homescreen> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.only(
-            top: 20.h,
-            bottom: 20.0,
-            left: 30,
-            right: 30,
+          padding: EdgeInsets.symmetric(
+            vertical: 20.h,
+            horizontal: 30,
           ),
           child: SingleChildScrollView(
             // fixes overflow error when typing
@@ -188,8 +184,8 @@ class _HomescreenState extends State<Homescreen> {
                     padding: EdgeInsets.only(bottom: 30.h, top: 20.h),
                     child: TimeDisplay(
                       isTimerRunning,
-                      minutes,
                       isFocusTime,
+                      minutes,
                     ),
                   ),
                   Expanded(

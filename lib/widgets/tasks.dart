@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../contraints.dart';
+import '../constraints.dart';
 
 class Tasks extends StatefulWidget {
   final List<String> tasks;
@@ -25,10 +25,11 @@ class _TasksState extends State<Tasks> {
       builder: (ctx, constraints) {
         return Container(
           width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             children: [
               Padding(
+                // padding for alligning "Today's Tasks" with list
                 padding: const EdgeInsets.only(left: 10),
                 child: Align(
                   alignment: Alignment.topLeft,
@@ -40,6 +41,7 @@ class _TasksState extends State<Tasks> {
               ),
               (widget.tasks.isEmpty)
                   ? Column(
+                      // "No Tasks" text and illustration
                       children: [
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: 20.h),
@@ -60,15 +62,19 @@ class _TasksState extends State<Tasks> {
                               color: softTextColor,
                               fontSize: 26.sp,
                               fontWeight: FontWeight.bold),
-                        )
+                        ),
                       ],
                     )
                   : Expanded(
+                      // task list
                       child: ListView.builder(
                         itemCount: widget.tasks.length,
                         itemBuilder: (ctx, index) {
                           return _buildTaskContainer(
-                              ctx, widget.tasks[index], index);
+                            ctx,
+                            widget.tasks[index],
+                            index,
+                          );
                         },
                       ),
                     ),
@@ -87,8 +93,8 @@ class _TasksState extends State<Tasks> {
     return LayoutBuilder(
       builder: (ctx, constraints) {
         return Container(
-          margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: Colors.white,
@@ -98,6 +104,7 @@ class _TasksState extends State<Tasks> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
+                // defines width that text can extend
                 width: constraints.maxWidth * 0.7,
                 child: Text(
                   task,
@@ -106,6 +113,7 @@ class _TasksState extends State<Tasks> {
                 ),
               ),
               GestureDetector(
+                // trash icon
                 onTap: () => _deleteTask(index),
                 child: Icon(
                   Icons.delete,

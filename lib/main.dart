@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'contraints.dart';
+import 'constraints.dart';
 import "./screens/homescreen.dart";
 
 void main() {
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: Size(392.72727272727275, 759.2727272727273),
+      designSize: Size(392.73, 759.27),
       builder: () => MaterialApp(
         theme: ThemeData(
           backgroundColor: kBackgroundColor,
@@ -36,9 +36,6 @@ class MyApp extends StatelessWidget {
                     color: textColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 26.sp),
-                bodyText2: TextStyle(
-                  color: textColor,
-                ),
                 headline6: TextStyle(color: textColor),
               ),
         ),

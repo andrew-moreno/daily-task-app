@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../contraints.dart';
+import '../constraints.dart';
 
 class Heading extends StatelessWidget {
   @override
@@ -13,14 +12,11 @@ class Heading extends StatelessWidget {
           "Productivity Bitch",
           style: Theme.of(context).textTheme.headline5,
         ),
-        IconButton(
-          icon: Container(
-            padding: EdgeInsets.only(
-              top: 4,
-              left: 4,
-              right: 5,
-              bottom: 5,
-            ),
+        InkWell(
+          // settings button
+          onTap: () {},
+          child: Container(
+            padding: const EdgeInsets.all(5),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(7),
@@ -31,7 +27,6 @@ class Heading extends StatelessWidget {
               color: textColor,
             ),
           ),
-          onPressed: () {},
         ),
       ],
     );

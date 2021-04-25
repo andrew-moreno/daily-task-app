@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../contraints.dart';
+import '../constraints.dart';
 
 class Buttons extends StatelessWidget {
   final Function toggleTimer;
@@ -30,6 +30,7 @@ class Buttons extends StatelessWidget {
       children: [
         (isTimerChanging)
             ? _buildButton(
+                // button for starting break/focus timer
                 text: (isFocusTime) ? "Start your break" : "START GRINDING",
                 color: kPurpleColor,
                 ontap: () => toggleTimerMode(),
@@ -40,6 +41,7 @@ class Buttons extends StatelessWidget {
                 children: [
                   (isTimerRunning)
                       ? _buildButton(
+                          // button for pausing and resuming timer
                           text:
                               (isTimerPaused) ? "Resume Timer" : "Pause Timer",
                           color: kDarkGreenColor,
@@ -47,29 +49,36 @@ class Buttons extends StatelessWidget {
                           width: 160.w,
                         )
                       : _buildButton(
+                          // button for adding a new task
                           text: "New Task",
                           color: kDarkGreenColor,
                           ontap: () => addTask(context),
                           width: 160.w,
                         ),
                   _buildButton(
+                    // button for starting and stopping timer
                     text: (isTimerRunning) ? "Stop Timer" : "Start Timer",
                     color: kPurpleColor,
                     ontap: () => toggleTimer(),
                     width: 160.w,
-                  )
+                  ),
                 ],
               ),
       ],
     );
   }
 
-  InkWell _buildButton(
-      {String text, Color color, Function ontap, double width}) {
+  // button builder method
+  InkWell _buildButton({
+    String text,
+    Color color,
+    Function ontap,
+    double width,
+  }) {
     return InkWell(
       onTap: ontap,
       child: Ink(
-        padding: EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         width: width, // should be 160
         decoration: BoxDecoration(
           color: color,
@@ -79,7 +88,7 @@ class Buttons extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-            color: Colors.white,
+            color: kBackgroundColor,
             fontSize: 18.sp,
           ),
           textAlign: TextAlign.center,
