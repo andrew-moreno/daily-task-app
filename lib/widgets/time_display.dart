@@ -7,7 +7,8 @@ import '../contraints.dart';
 class TimeDisplay extends StatelessWidget {
   final bool _isTimerRunning;
   final int _minutes;
-  TimeDisplay(this._isTimerRunning, this._minutes);
+  final bool _isWorkTime;
+  TimeDisplay(this._isTimerRunning, this._minutes, this._isWorkTime);
 
   @override
   Widget build(BuildContext context) {
@@ -21,40 +22,48 @@ class TimeDisplay extends StatelessWidget {
         boxShadow: [kBoxShadow],
       ),
       child: (_isTimerRunning)
-          ? Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                  child: Text(
-                    "$_minutes",
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headline1,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 20.0),
-                  child: Text(
-                    "minutes\nleft",
-                    style: Theme.of(context).textTheme.headline3,
-                  ),
-                ),
-              ],
-            )
-          : Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Center(
-                child: AutoSizeText(
-                  "Start that timer, bitch",
-                  maxLines: 2,
-                  style: TextStyle(
-                    color: textColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 58.h,
-                  ),
-                ),
-              ),
-            ),
+          ? (_minutes == 0 && _isWorkTime)
+              ? _buildDisplayText("It's break time, bitch")
+              : (_minutes == 0 && !_isWorkTime)
+                  ? _buildDisplayText("It's focus time, bitch")
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "$_minutes",
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headline1,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 20.0),
+                          child: Text(
+                            "minutes\nleft",
+                            style: Theme.of(context).textTheme.headline3,
+                          ),
+                        ),
+                      ],
+                    )
+          : _buildDisplayText("Start that timer, bitch"),
     );
   }
+}
+
+Padding _buildDisplayText(String text) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+    child: Center(
+      child: AutoSizeText(
+        text,
+        maxLines: 2,
+        style: TextStyle(
+          color: textColor,
+          fontWeight: FontWeight.bold,
+          fontSize: 58.h,
+        ),
+      ),
+    ),
+  );
 }

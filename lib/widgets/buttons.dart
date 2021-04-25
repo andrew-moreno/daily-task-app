@@ -7,8 +7,11 @@ class Buttons extends StatelessWidget {
   final Function toggleTimer;
   final Function togglePause;
   final Function addTask;
+  final Function toggleTimerMode;
   final bool isTimerPaused;
   final bool isTimerRunning;
+  final bool isTimerChanging;
+  final bool isFocusTime;
 
   Buttons(
     this.toggleTimer,
@@ -16,41 +19,58 @@ class Buttons extends StatelessWidget {
     this.togglePause,
     this.isTimerPaused,
     this.addTask,
+    this.toggleTimerMode,
+    this.isTimerChanging,
+    this.isFocusTime,
   );
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Stack(
       children: [
-        (isTimerRunning)
+        (isTimerChanging)
             ? _buildButton(
-                text: (isTimerPaused) ? "Resume Timer" : "Pause Timer",
-                color: kDarkGreenColor,
-                ontap: () => togglePause(),
+                text: (isFocusTime) ? "Start your break" : "START GRINDING",
+                color: kPurpleColor,
+                ontap: () => toggleTimerMode(),
+                width: 350.w,
               )
-            : _buildButton(
-                text: "New Task",
-                color: kDarkGreenColor,
-                ontap: () {
-                  addTask(context);
-                },
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  (isTimerRunning)
+                      ? _buildButton(
+                          text:
+                              (isTimerPaused) ? "Resume Timer" : "Pause Timer",
+                          color: kDarkGreenColor,
+                          ontap: () => togglePause(),
+                          width: 160.w,
+                        )
+                      : _buildButton(
+                          text: "New Task",
+                          color: kDarkGreenColor,
+                          ontap: () => addTask(context),
+                          width: 160.w,
+                        ),
+                  _buildButton(
+                    text: (isTimerRunning) ? "Stop Timer" : "Start Timer",
+                    color: kPurpleColor,
+                    ontap: () => toggleTimer(),
+                    width: 160.w,
+                  )
+                ],
               ),
-        _buildButton(
-          text: (isTimerRunning) ? "Stop Timer" : "Start Timer",
-          color: kPurpleColor,
-          ontap: () => toggleTimer(),
-        )
       ],
     );
   }
 
-  InkWell _buildButton({String text, Color color, Function ontap}) {
+  InkWell _buildButton(
+      {String text, Color color, Function ontap, double width}) {
     return InkWell(
       onTap: ontap,
       child: Ink(
         padding: EdgeInsets.symmetric(vertical: 10),
-        width: 160.w,
+        width: width, // should be 160
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(10),

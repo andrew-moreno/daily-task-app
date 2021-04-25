@@ -18,56 +18,66 @@ class _HomescreenState extends State<Homescreen> {
 
   bool isTimerRunning = false;
   bool isTimerPaused = false;
+  bool isFocusTime = true;
+  bool isTimerChanging = false;
   int minutes;
   Timer _timer;
-  int defaultTime = 10;
-  int secondsInterval = 1;
+  int _focusTime = 5;
+  int _breakTime = 2;
+  int _secondsInterval = 1; // set to 2 for testing
 
-  void _startTimer() {
-    if (_timer != null) {
-      _stopTimer();
-    }
-    minutes = defaultTime;
-
-    _timer = Timer.periodic(Duration(seconds: secondsInterval), (_timer) {
-      if (minutes > 0) {
+  void _setTimer() {
+    _timer = Timer.periodic(Duration(seconds: _secondsInterval), (_timer) {
+      if (minutes > 1) {
+        // set to one so that pause executes on 0 count
         setState(() {
           minutes--;
         });
         print("1 minute passed, Time is: $minutes");
       } else {
         setState(() {
-          minutes = defaultTime;
+          minutes--;
         });
-
+        togglePause();
         _timer.cancel();
+        setState(() {
+          isTimerChanging = true;
+        });
       }
     });
   }
 
+  void _startTimer() {
+    print("Starting timer");
+    if (_timer != null) {
+      _stopTimer();
+    }
+    minutes = _focusTime;
+    _setTimer();
+  }
+
   void _stopTimer() {
+    print("Stopping timer");
     if (_timer != null) {
       _timer.cancel();
-      minutes = defaultTime;
+      minutes = _focusTime;
       print("timer cleared");
     }
   }
 
-  void pauseTimer() {
+  void _pauseTimer() {
+    print("Pausing timer");
     _timer.cancel();
+    setState(() {
+      isTimerPaused = true;
+    });
   }
 
-  void resumeTimer() {
-    _timer = Timer.periodic(Duration(seconds: secondsInterval), (_timer) {
-      if (minutes > 0) {
-        setState(() {
-          minutes--;
-        });
-        print("1 minute passed");
-      } else {
-        minutes = defaultTime;
-        _timer.cancel();
-      }
+  void _resumeTimer() {
+    print("Resuming timer");
+    _setTimer();
+    setState(() {
+      isTimerPaused = false;
     });
   }
 
@@ -87,16 +97,31 @@ class _HomescreenState extends State<Homescreen> {
   }
 
   void togglePause() {
-    if (isTimerPaused) {
+    if (isTimerPaused)
+      _resumeTimer();
+    else
+      _pauseTimer();
+  }
+
+  void toggleTimerMode() {
+    if (isFocusTime) {
       setState(() {
-        isTimerPaused = false;
+        minutes = _breakTime;
       });
-      resumeTimer();
+      isFocusTime = false;
+      _setTimer();
+      isTimerPaused = false;
+      isTimerChanging = false;
+      print("Entered break time");
     } else {
       setState(() {
-        isTimerPaused = true;
+        minutes = _focusTime;
       });
-      pauseTimer();
+      isFocusTime = true;
+      _setTimer();
+      isTimerPaused = false;
+      isTimerChanging = false;
+      print("Entered focus time");
     }
   }
 
@@ -144,32 +169,47 @@ class _HomescreenState extends State<Homescreen> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding:
-              EdgeInsets.only(top: 20.h, bottom: 20.0, left: 30, right: 30),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Heading(),
-              Padding(
-                padding: EdgeInsets.only(bottom: 30.h, top: 20.h),
-                child: TimeDisplay(
-                  isTimerRunning,
-                  minutes,
-                ),
+          padding: EdgeInsets.only(
+            top: 20.h,
+            bottom: 20.0,
+            left: 30,
+            right: 30,
+          ),
+          child: SingleChildScrollView(
+            // fixes overflow error when typing
+            child: Container(
+              // screen height - notification bar - padding
+              height: 1.sh - MediaQuery.of(context).padding.top - 20.h - 20,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Heading(),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 30.h, top: 20.h),
+                    child: TimeDisplay(
+                      isTimerRunning,
+                      minutes,
+                      isFocusTime,
+                    ),
+                  ),
+                  Expanded(
+                    child: Tasks(
+                      tasks,
+                    ),
+                  ),
+                  Buttons(
+                    toggleTimer,
+                    isTimerRunning,
+                    togglePause,
+                    isTimerPaused,
+                    addTask,
+                    toggleTimerMode,
+                    isTimerChanging,
+                    isFocusTime,
+                  ),
+                ],
               ),
-              Expanded(
-                child: Tasks(
-                  tasks,
-                ),
-              ),
-              Buttons(
-                toggleTimer,
-                isTimerRunning,
-                togglePause,
-                isTimerPaused,
-                addTask,
-              ),
-            ],
+            ),
           ),
         ),
       ),
